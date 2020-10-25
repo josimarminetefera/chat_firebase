@@ -7,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'ChatMensagem.dart';
+
 class ChatScreen extends StatefulWidget {
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -75,16 +77,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
     Map<String, dynamic> dados = {
       "uid": firebaseUser.uid,
-      "senderName": firebaseUser.displayName,
-      "senderFotoUrl": firebaseUser.photoUrl,
+      "quemEnviou": firebaseUser.displayName,
+      "quemEnviouFotoUrl": firebaseUser.photoUrl,
     };
 
     if (imagem != null) {
       //tarefa para dar nome ao arquivo
-      StorageUploadTask task = FirebaseStorage.instance.ref().child(DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString()).putFile(imagem);
+      StorageUploadTask task = FirebaseStorage.instance.ref().child(DateTime.now().millisecondsSinceEpoch.toString()).putFile(imagem);
       //subir a nova imagem criada
       StorageTaskSnapshot taskSnapshot = await task.onComplete;
       String url = await taskSnapshot.ref.getDownloadURL();
@@ -126,9 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       itemCount: documents.length,
                       reverse: true,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(documents[index].data["texto"]),
-                        );
+                        return ChatMensagem(documents[index].data, true);
                       },
                     );
                 }
