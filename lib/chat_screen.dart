@@ -87,7 +87,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
     if (imagem != null) {
       //tarefa para dar nome ao arquivo
-      StorageUploadTask task = FirebaseStorage.instance.ref().child(DateTime.now().millisecondsSinceEpoch.toString()).putFile(imagem);
+      StorageUploadTask task = FirebaseStorage.instance.ref().child(
+          firebaseUser.uid + DateTime.now().millisecondsSinceEpoch.toString()
+      ).putFile(imagem);
 
       setState(() {
         _carregando = true;
